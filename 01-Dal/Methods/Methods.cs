@@ -56,7 +56,7 @@ namespace _01_Dal.Methods
                     var resp = db.Query("spInsertarUsuario ", p, commandType: CommandType.StoredProcedure);
 
                     dynamic id = new { ID = resp.Select(x => x.ID).FirstOrDefault() };
-                    
+
                     return id;
                 }
             }
@@ -77,6 +77,59 @@ namespace _01_Dal.Methods
                 {
                     var resp = conn.Query<Users>("spConsultaUsuarios", new { }, commandType: CommandType.StoredProcedure);
                     return resp;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        /// <summary>
+        /// Actualizar usuarios
+        /// </summary>
+        /// <param name="users"></param>
+        /// <returns></returns>
+        public dynamic UpdateUsers(Users users)
+        {
+            try
+            {
+                using (IDbConnection db = conn)
+                {
+                    var p = new DynamicParameters();
+
+                    p.Add("@Num", users.NumDocumento, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@Nombres", users.Nombres, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@Apellidos", users.Apellidos, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@Direccion", users.Direccion, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@Telefono", users.Telefono, dbType: DbType.String, direction: ParameterDirection.Input);
+
+                    var resp = db.Query("spActualizarUsuario ", p, commandType: CommandType.StoredProcedure);
+
+                    dynamic id = new { ID = resp.Select(x => x.ID).FirstOrDefault() };
+
+                    return id;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public bool DeleteUsers(string id)
+        {
+            try
+            {
+                using (IDbConnection db = conn)
+                {
+                    bool resp = false;
+                    var p = new DynamicParameters();
+
+                    p.Add("@Num", id, dbType: DbType.String, direction: ParameterDirection.Input);
+                    var re = db.Query("spEliminarUsuario", p, commandType: CommandType.StoredProcedure);
+
+                    //if (delete == 1)
+                    //    resp = true
+                    return resp = true;
                 }
             }
             catch (Exception ex)
