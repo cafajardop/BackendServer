@@ -64,8 +64,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Categoria.cs" />
+    <Compile Include="Entities\Encrypt.cs" />
+    <Compile Include="Entities\LoginUser.cs" />
     <Compile Include="Entities\TipoDocumento.cs" />
     <Compile Include="Entities\Users.cs" />
+    <Compile Include="Methods\Authentication.cs" />
     <Compile Include="Methods\Methods.cs" />
     <Compile Include="Methods\MethodsGenerics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
