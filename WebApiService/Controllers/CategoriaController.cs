@@ -59,6 +59,26 @@ namespace WebApiService.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetCategoriaNombre")]
+        public IHttpActionResult GetCategoriaNombre(string id)
+        {
+            try
+            {
+                var resp = new MethodsGenerics().GetCategoryNombre(id);
+                return Ok(resp);
+            }
+            catch (System.Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         [HttpPut]
         [Route("UpdateCategoria")]

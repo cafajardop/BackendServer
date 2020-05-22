@@ -185,7 +185,9 @@
     <Compile Include="Controllers\ConsultaUsuariosController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
     <Compile Include="Controllers\DeleteUsersController.cs" />
+    <Compile Include="Controllers\EmailController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InsertImageController.cs" />
     <Compile Include="Controllers\InsertUsersController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\TipoDocumentoController.cs" />

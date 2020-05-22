@@ -4,7 +4,9 @@ using System.ComponentModel.Design;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using _01_Dal.Entities;
 using Dapper;
 
@@ -18,14 +20,17 @@ namespace _01_Dal.Methods
         /// Consulta las categorias
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<Categoria> ConsultCategory()
+        public dynamic ConsultCategory()
         {
             try
             {
                 using (IDbConnection db = conn)
                 {
                     var resp = conn.Query<Categoria>("SP_Consultar_Categoria", new { }, commandType: CommandType.StoredProcedure);
-                    return resp;
+
+                    dynamic respTotal = new { Registros = resp, Total = resp.Count()};
+
+                    return respTotal;
                 }
             }
             catch (Exception ex)
@@ -52,6 +57,30 @@ namespace _01_Dal.Methods
 
                     var resp = db.Query<Categoria>("SP_Consultar_Categoria_Id ", p, commandType: CommandType.StoredProcedure);
                     return resp;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        /// <summary>
+        /// Actualiza las categorias
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Categoria> GetCategoryNombre(string NombreCategory)
+        {
+            try
+            {
+                using (IDbConnection db = conn)
+                {
+                    var p = new DynamicParameters();
+                    p.Add("@idCategoria", NombreCategory, dbType: DbType.String, direction: ParameterDirection.Input);
+
+                    var resp = db.Query<Categoria>("SP_Consultar_Categoria_Nombre", p, commandType: CommandType.StoredProcedure);
+                    return resp;
+                    
                 }
             }
             catch (Exception ex)
@@ -126,6 +155,32 @@ namespace _01_Dal.Methods
                     p.Add("@idCategoria", id, dbType: DbType.Int16, direction: ParameterDirection.Input);
 
                     db.Query("spEliminarCategoria ", p, commandType: CommandType.StoredProcedure);
+
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool InsertImage(Imagenes imagenes)
+        {
+            try
+            {
+                using (IDbConnection db = conn)
+                {
+
+                    //Obtener datos de la imagen
+                    var p = new DynamicParameters();
+
+                    p.Add("@idUser", imagenes.idUser, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@Imagen", imagenes.Imagen, dbType: DbType.Byte, direction: ParameterDirection.Input);
+                    p.Add("@Title", imagenes.Title, dbType: DbType.String, direction: ParameterDirection.Input);
+
+                    var sqlUserName = "INSERT INTO Imagenes (idUser,Imagen,Title) Values (@idUser,@Imagen,@Title)";
+                    db.Query(sqlUserName, p);
 
                     return true;
                 }
