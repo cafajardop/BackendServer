@@ -66,7 +66,7 @@ namespace _01_Dal.Methods
         }
 
         /// <summary>
-        /// Actualiza las categorias
+        /// Consulta por cualquier cosa 
         /// </summary>
         /// <returns></returns>
         public IEnumerable<Categoria> GetCategoryNombre(string NombreCategory)

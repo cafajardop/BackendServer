@@ -10,7 +10,7 @@ namespace WebApiService.Controllers
     /// </summary>
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     [RoutePrefix("Users")]
-    [Authorize]
+    //[Authorize]
     public class InsertUsersController : ApiController
     {
         /// <summary>

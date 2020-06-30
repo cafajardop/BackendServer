@@ -64,12 +64,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Categoria.cs" />
+    <Compile Include="Entities\Comparatives.cs" />
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\Encrypt.cs" />
     <Compile Include="Entities\Imagenes.cs" />
     <Compile Include="Entities\LoginUser.cs" />
+    <Compile Include="Entities\Question.cs" />
     <Compile Include="Entities\TipoDocumento.cs" />
     <Compile Include="Entities\Users.cs" />
+    <Compile Include="MethodsKnowledgeBaseEnglish\KnowledgeBase.cs" />
     <Compile Include="Methods\Authentication.cs" />
     <Compile Include="Methods\Methods.cs" />
     <Compile Include="Methods\MethodsGenerics.cs" />
