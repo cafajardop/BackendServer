@@ -79,6 +79,29 @@ namespace _01_Dal.MethodsKnowledgeBaseEnglish
             }
         }
 
+        public dynamic GetFindComparativeID(string ID)
+        {
+            try
+            {
+                using (IDbConnection db = conn)
+                {
+                    var p = new DynamicParameters();
+                    p.Add("@busquedaID", ID, dbType: DbType.String, direction: ParameterDirection.Input);
+
+                    var resp = db.Query<Question>("SP_Find_Comparative_ID", p, commandType: CommandType.StoredProcedure);
+
+                    dynamic respTotal = new { Registros = resp, Total = resp.Count() };
+
+                    return respTotal;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public bool UpdateComparative(Question comparative)
         {
             try

@@ -191,6 +191,7 @@
     <Compile Include="Controllers\InsertImageController.cs" />
     <Compile Include="Controllers\InsertUsersController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\TipoDocumentoController.cs" />
     <Compile Include="Controllers\TokenGenerator.cs" />
     <Compile Include="Controllers\TokenValidationHandler.cs" />
