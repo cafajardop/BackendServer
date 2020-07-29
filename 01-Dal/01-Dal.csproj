@@ -69,6 +69,7 @@
     <Compile Include="Entities\Encrypt.cs" />
     <Compile Include="Entities\Imagenes.cs" />
     <Compile Include="Entities\LoginUser.cs" />
+    <Compile Include="Entities\Pass.cs" />
     <Compile Include="Entities\Question.cs" />
     <Compile Include="Entities\TipoDocumento.cs" />
     <Compile Include="Entities\Users.cs" />

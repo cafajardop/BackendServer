@@ -169,6 +169,8 @@ namespace _01_Dal.Methods
         {
             try
             {
+                
+
                 using (IDbConnection db = conn)
                 {
 

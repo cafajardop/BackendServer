@@ -21,7 +21,7 @@ namespace _01_Dal.Methods
         /// Consulta el tipo de documento
         /// </summary>
         /// <returns></returns>
-        public bool loginValidate(string username, string password)
+        public Tuple<bool, string, string> loginValidate(string username, string password)
         {
             try
             {
@@ -33,23 +33,29 @@ namespace _01_Dal.Methods
                     p.Add("@username", username, dbType: DbType.String, direction: ParameterDirection.Input);
                     p.Add("@password", username, dbType: DbType.String, direction: ParameterDirection.Input);
 
-                    var sqlUserName = "SELECT email FROM LoginUser where email = @username";
+                    var sqlUserName = "SELECT id,userName,email,password FROM LoginUser where email = @username";
                     var sqlPassword = "SELECT password FROM LoginUser where email = @username";
                     var Resuser = db.Query(sqlUserName, p);
                     var Respass = db.Query(sqlPassword, p);
 
-                    dynamic user = new { email = Resuser.Select(x => x.email).FirstOrDefault() };
+                    dynamic user = Resuser.Select(x => new {
+                        x.id,
+                        x.email,
+                        x.password,
+                        x.userName
+                    }).FirstOrDefault();
+
                     dynamic pass = new { password = Respass.Select(x => x.password).FirstOrDefault() };
                     if (user != null)
                     {
                         if (user.email == username && pass.password == ePass)
-                            return true;
+                            return Tuple.Create(true, user.userName, user.id);
                         else
-                            return false;
+                            return Tuple.Create(false, "", "");
                     }
                     else
                     {
-                        return false;
+                        return Tuple.Create(false, "", "");
                     }
                 }
             }
@@ -95,6 +101,108 @@ namespace _01_Dal.Methods
                 throw ex;
             }
         }
+
+        public bool UpdatePassword(Pass pass)
+        {
+            try
+            {
+                pass.passwordOld = GetSHA256(pass.passwordOld);
+                pass.password = GetSHA256(pass.password);
+
+                using (IDbConnection db = conn)
+                {
+                    var p = new DynamicParameters();
+
+                    p.Add("@id", pass.id, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@passwordOld", pass.passwordOld, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@password", pass.password, dbType: DbType.String, direction: ParameterDirection.Input);
+
+                    var sqlPassOld = "SELECT password FROM LoginUser where id = @id";
+                    var Resuser = db.Query(sqlPassOld, p);
+                    dynamic passChange = Resuser.Select(x => new {
+                        x.password
+                    }).FirstOrDefault();
+
+                    if (passChange != null)
+                    {
+                        if (passChange.password == pass.passwordOld)
+                        {
+                            var updatepass = "UPDATE C SET C.password = @password FROM LoginUser C WHERE id = @id";
+                            db.Query(updatepass, p);
+
+                            return true;
+                        }
+                        else
+                            return false;
+                    }
+                    else
+                        return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool UpdateUser(LoginUser updateUser)
+        {
+            try
+            {
+                using (IDbConnection db = conn)
+                {
+                    var p = new DynamicParameters();
+
+                    p.Add("@id", updateUser.id, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@userName", updateUser.userName, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@email", updateUser.email, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@firstName", updateUser.firstName, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@lastName", updateUser.lastName, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@phoneNumber", updateUser.phoneNumber, dbType: DbType.String, direction: ParameterDirection.Input);
+                    p.Add("@position", updateUser.position, dbType: DbType.String, direction: ParameterDirection.Input);
+
+                    var resp = db.Query<LoginUser>("spUpdateUserCNR", p , commandType: CommandType.StoredProcedure).ToList();
+                    
+                    return resp.Count.Equals(0) ? true : false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public dynamic GetLoginUser (string id)
+        {
+            try
+            {
+                using (IDbConnection db = conn)
+                {
+                    var p = new DynamicParameters();
+                    p.Add("@id", id, dbType: DbType.String, direction: ParameterDirection.Input);
+                    var sqlUserName = "SELECT id,userName,email,password,firstName,lastName,phoneNumber,position,UserId FROM LoginUser where id = @id";
+                    var Resuser = db.Query(sqlUserName, p);
+
+                    dynamic user = Resuser.Select(x => new {
+                        x.email,
+                        x.userName,
+                        x.firstName,
+                        x.lastName,
+                        x.phoneNumber,
+                        x.position,
+                        x.UserId
+                    }).FirstOrDefault();
+
+                   return user;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// Encriptacion de passoword
         /// </summary>
